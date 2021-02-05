@@ -74,13 +74,16 @@ RUN a2enmod rewrite
 RUN mkdir -p /app && rm -fr /var/www/html && ln -s /app /var/www/html
 ADD app/ /app
 
+# Creating config and log directories
+RUN mkdir -p /config && mkdir -p /log
+
 #Environment variables to configure php
 ENV PHP_UPLOAD_MAX_FILESIZE 10M
 ENV PHP_POST_MAX_SIZE 10M
 ENV PHP_VERSION 7.4
 
 # Add volumes for the app and MySql
-VOLUME  ["/var/lib/mysql", "/app" ]
+VOLUME  ["/var/lib/mysql", "/app", "/config", "/log" ]
 
 EXPOSE 80 3306
 CMD ["/run.sh"]

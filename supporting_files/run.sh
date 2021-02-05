@@ -5,6 +5,29 @@
 # Where does our MySQL data live?
 VOLUME_HOME="/var/lib/mysql"
 
+if [[ ! -f /config/php.ini ]]; then
+    echo "=> no PHP.INI detected, creating"
+    if [ -e /etc/php/5.6/apache2/php.ini ]; then
+        mv /etc/php/5.6/apache2/php.ini /config/php.ini
+        ln -s /config/php.ini /etc/php/5.6/apache2/php.ini
+    else
+        mv /etc/php/$PHP_VERSION/apache2/php.ini /config/php.ini
+        ln -s /config/php.ini /etc/php/$PHP_VERSION/apache2/php.ini
+    fi
+fi
+
+if [[ ! -f /config/apache2.conf ]]; then
+    echo "=> no apache2.conf detected, creating"
+        mv /etc/apache2/apache2.conf /config/apache2.conf
+        ln -s /config/apache2.conf /etc/apache2/apache2.conf
+fi
+
+if [[ ! -f /config/vhosts.conf ]]; then
+    echo "=> no vhosts.conf detected, creating"
+        mv /etc/apache2/sites-available/000-default.conf /config/vhosts.conf
+        ln -s /config/vhosts.conf /etc/apache2/sites-available/000-default.conf
+fi
+
 #######################################
 # Use sed to replace apache php.ini values for a given PHP version.
 # Globals:
@@ -46,6 +69,9 @@ if [ -e /etc/php/$PHP_VERSION/cli/php.ini ]; then replace_cli_php_ini_values $PH
 
 echo "Editing APACHE_RUN_GROUP environment variable"
 sed -i "s/export APACHE_RUN_GROUP=www-data/export APACHE_RUN_GROUP=staff/" /etc/apache2/envvars
+
+echo "Editing APACHE_LOG_DIR environment variable"
+sed -i "s#export APACHE_LOG_DIR=/var/log/apache2#export APACHE_LOG_DIR=/log#" /etc/apache2/envvars
 
 if [ -n "$APACHE_ROOT" ];then
     echo "Linking /var/www/html to the Apache root"
@@ -109,4 +135,4 @@ else
 fi
 
 echo "Starting supervisord"
-exec supervisord -n
+exec supervisord -n -c /etc/supervisor/supervisord.conf
