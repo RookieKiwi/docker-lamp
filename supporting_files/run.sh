@@ -16,8 +16,10 @@ if [[ ! -f /config/php.ini ]]; then
     fi
 else
     if [ -e /etc/php/5.6/apache2/php.ini ]; then
+        rm /etc/php/5.6/apache2/php.ini
         ln -s /config/php.ini /etc/php/5.6/apache2/php.ini
     else
+        rm /etc/php/$PHP_VERSION/apache2/php.ini
         ln -s /config/php.ini /etc/php/$PHP_VERSION/apache2/php.ini
     fi
 fi
@@ -27,6 +29,7 @@ if [[ ! -f /config/apache2.conf ]]; then
         mv /etc/apache2/apache2.conf /config/apache2.conf
         ln -s /config/apache2.conf /etc/apache2/apache2.conf
 else
+    rm /etc/apache2/apache2.conf
     ln -s /config/apache2.conf /etc/apache2/apache2.conf
 fi
 
@@ -35,6 +38,7 @@ if [[ ! -f /config/vhosts.conf ]]; then
         mv /etc/apache2/sites-available/000-default.conf /config/vhosts.conf
         ln -s /config/vhosts.conf /etc/apache2/sites-available/000-default.conf
 else
+    rm /etc/apache2/sites-available/000-default.conf
     ln -s /config/vhosts.conf /etc/apache2/sites-available/000-default.conf
 fi
 
@@ -43,6 +47,7 @@ if [[ ! -f /config/mysqld.cnf ]]; then
         mv /etc/mysql/mysql.conf.d/mysqld.cnf /config/mysqld.cnf
         ln -s /config/mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
 else
+    rm /etc/mysql/mysql.conf.d/mysqld.cnf
     ln -s /config/mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
 fi
 
