@@ -14,18 +14,36 @@ if [[ ! -f /config/php.ini ]]; then
         mv /etc/php/$PHP_VERSION/apache2/php.ini /config/php.ini
         ln -s /config/php.ini /etc/php/$PHP_VERSION/apache2/php.ini
     fi
+else
+    if [ -e /etc/php/5.6/apache2/php.ini ]; then
+        ln -s /config/php.ini /etc/php/5.6/apache2/php.ini
+    else
+        ln -s /config/php.ini /etc/php/$PHP_VERSION/apache2/php.ini
+    fi
 fi
 
 if [[ ! -f /config/apache2.conf ]]; then
     echo "=> no apache2.conf detected, creating"
         mv /etc/apache2/apache2.conf /config/apache2.conf
         ln -s /config/apache2.conf /etc/apache2/apache2.conf
+else
+    ln -s /config/apache2.conf /etc/apache2/apache2.conf
 fi
 
 if [[ ! -f /config/vhosts.conf ]]; then
     echo "=> no vhosts.conf detected, creating"
         mv /etc/apache2/sites-available/000-default.conf /config/vhosts.conf
         ln -s /config/vhosts.conf /etc/apache2/sites-available/000-default.conf
+else
+    ln -s /config/vhosts.conf /etc/apache2/sites-available/000-default.conf
+fi
+
+if [[ ! -f /config/mysqld.cnf ]]; then
+    echo "=> no mysqld.cnf detected, creating"
+        mv /etc/mysql/mysql.conf.d/mysqld.cnf /config/mysqld.cnf
+        ln -s /config/mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
+else
+    ln -s /config/mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
 fi
 
 #######################################
